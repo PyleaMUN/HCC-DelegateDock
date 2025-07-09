@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DelegateDock – Historical Crisis Committee</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--brand:#00897b;--accent:#00b4a0;--bg:#f2fbfa;--radius:1.5rem;--dark:#333}
+*{box-sizing:border-box;font-family:system-ui,"Segoe UI",Roboto,sans-serif}
+body{margin:0;background:var(--bg);color:var(--dark);line-height:1.5}
+h1{margin:1rem 0;text-align:center;font-size:2rem;color:var(--brand)}
+/* Letterhead */
+.letterhead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;background:#cfeae7;border-bottom:4px solid var(--brand);padding:12px 22px;gap:14px}
+.address,.contact{flex:1 1 180px;font-size:.9rem;color:#00332f}
+.contact{display:flex;flex-direction:column;align-items:flex-end}
+.contact div{margin:2px 0}
+.logo{width:120px;height:auto}
+.letterhead a{color:var(--brand);text-decoration:none}
+@media(max-width:600px){.contact{align-items:center;text-align:center}}
+/* Cards */
+section{background:#fff;border-radius:var(--radius);padding:2.2rem 2rem;margin:1.6rem auto;max-width:900px;box-shadow:0 10px 28px rgba(0,0,0,.2);border:2px solid rgba(0,0,0,.07)}
+label{display:block;margin:.7rem 0 .35rem;font-weight:600}
+input,select{width:100%;padding:.75rem .9rem;border:1px solid #c2c2c2;border-radius:.6rem;margin-bottom:1.3rem;font-size:1rem}
+button{cursor:pointer;border:none;color:#fff;padding:.85rem 1.6rem;border-radius:var(--radius);font-weight:600;transition:transform .12s,box-shadow .12s;background-image:linear-gradient(180deg,var(--accent) 0%,var(--brand) 100%)}
+button:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.25)}
+ul{list-style:none;margin:0;padding:0}
+li{padding:.6rem .9rem;border-bottom:1px solid #e5e5e5;display:flex;justify-content:space-between;align-items:center;font-size:.96rem}
+.pill{background:var(--accent);color:#fff;border-radius:9999px;padding:.18rem .8rem;font-size:.82rem}
+.timer{font-weight:700;font-size:1.6rem;text-align:center;color:var(--brand);margin-top:1rem}
+.vote-btns button{margin-right:.45rem;background:var(--accent)}
+.vote-btns button[data-vote=yes]{background:#4caf50}
+.vote-btns button[data-vote=no]{background:#f44336}
+.vote-btns button[data-vote=abstain]{background:#ff9800}
+.results span{margin-right:1.15rem;font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.footer{text-align:center;font-size:.85rem;margin-top:2.4rem;color:#666}
+</style>
+</head>
+<body>
+<header>
+  <div class="letterhead">
+    <div class="address"><strong>4 Isminis Str.</strong><br>Pylaia, Thessaloniki – 55535</div>
+    <img src="https://pyleamun.github.io/interview-guide/pyleaMUNfinallogo_transparent.png" alt="PyleaMUN Logo" class="logo">
+    <div class="contact">
+      <div>📞 +30 2310 329 199</div>
+      <div>📧 <a href="mailto:pyleamun@gmail.com">pyleamun@gmail.com</a></div>
+      <div>🌐 <a href="https://pyleamun.github.io/pyleamun2026/" target="_blank">pyleamun.github.io/pyleamun2026</a></div>
+    </div>
+  </div>
+</header>
+
+<h1>Historical Crisis Committee — DelegateDock 🎈</h1>
+
+<!-- APP -->
+<div id="app">
+  <section>
+    <h2>Delegates</h2>
+    <div class="grid">
+      <div>
+        <label for="delegateName">Add delegate</label>
+        <input id="delegateName" placeholder="e.g. Athens">
+        <button id="addDelegate">Add</button>
+      </div>
+      <div><h3>Current list</h3><ul id="delegateList"></ul></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Speakers List</h2>
+    <div class="grid">
+      <div>
+        <label for="speakerSel">Choose delegate</label>
+        <select id="speakerSel"><option disabled selected>Select</option></select>
+        <button id="addSpeaker">Add to list</button>
+      </div>
+      <div><h3>Queue</h3><ul id="speakerQueue"></ul><button id="nextSpeaker" style="margin-top:.7rem">Next Speaker</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Motion Timer</h2>
+    <label for="motionType">Motion type</label>
+    <select id="motionType"><option>Moderated Caucus</option><option>Unmoderated Caucus</option><option>Suspension of the Meeting</option><option>Adjournment</option></select>
+    <label for="motionTime">Time (minutes)</label>
+    <input type="number" id="motionTime" value="5" min="1" max="120">
+    <button id="startMotion">Start</button>
+    <p class="timer" id="timerDisplay">00:00</p>
+  </section>
+
+  <section>
+    <h2>Voting</h2>
+    <div class="vote-btns">
+      <button data-vote="yes">Yes</button>
+      <button data-vote="no">No</button>
+      <button data-vote="abstain">Abstain</button>
+      <button id="resetVotes" style="background:#777">Reset</button>
+    </div>
+    <p class="results"><span id="yesCount">Yes: 0</span><span id="noCount">No: 0</span><span id="abstainCount">Abstain: 0</span></p>
+  </section>
+
+  <section>
+    <h2>Save / Load</h2>
+    <button id="saveBtn" style="background:var(--accent)">Save</button>
+    <button id="loadBtn" style="background:var(--accent);margin-left:.6rem">Load</button>
+    <p style="font-size:.85rem;color:#555">Data is stored in your browser.</p>
+  </section>
+
+  <p class="footer">All data stays on your device — no server needed. 🎉</p>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const key='hcc';
+const state={delegates:[],speakers:[],votes:{yes:0,no:0,abstain:0}};
+const save=()=>localStorage.setItem('delegatedock-'+key,JSON.stringify(state));
+const load=()=>{const d=localStorage.getItem('delegatedock-'+key);if(d)Object.assign(state,JSON.parse(d));};
+const render=()=>{ $('delegateList').innerHTML=state.delegates.map(d=>`<li>${d}</li>`).join(''); $('speakerSel').innerHTML='<option disabled selected>Select</option>'+state.delegates.map(d=>`<option>${d}</option>`).join(''); $('speakerQueue').innerHTML=state.speakers.map((s,i)=>`<li>${s}<span class="pill">${i+1}</span></li>`).join(''); $('yesCount').textContent='Yes: '+state.votes.yes; $('noCount').textContent='No: '+state.votes.no; $('abstainCount').textContent='Abstain: '+state.votes.abstain; };
+load();render();
+$('addDelegate').onclick=()=>{const n=$('delegateName').value.trim();if(n&&!state.delegates.includes(n)){state.delegates.push(n);$('delegateName').value='';render();save();}};
+$('addSpeaker').onclick=()=>{const n=$('speakerSel').value;if(n&&!state.speakers.includes(n)){state.speakers.push(n);render();save();}};
+$('nextSpeaker').onclick=()=>{if(state.speakers.length){alert('Current speaker: '+state.speakers.shift());render();save();}};
+let timerInt=null;$('startMotion').onclick=()=>{let sec=parseInt($('motionTime').value,10)||0;sec*=60;clearInterval(timerInt);const tick=()=>{$('timerDisplay').textContent=(sec/60>>0).toString().padStart(2,'0')+':'+(sec%60).toString().padStart(2,'0');};tick();timerInt=setInterval(()=>{sec--;tick();if(sec<=0){clearInterval(timerInt);alert('Time up');}},1000);};
+document.querySelectorAll('[data-vote]').forEach(b=>b.onclick=()=>{state.votes[b.dataset.vote]++;render();save();});
+$('resetVotes').onclick=()=>{state.votes={yes:0,no:0,abstain:0};render();save();};
+$('saveBtn').onclick=()=>{save();alert('Saved');};
+$('loadBtn').onclick=()=>{load();render();alert('Loaded');};
+</script>
+</body>
+</html>
